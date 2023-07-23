@@ -1,0 +1,80 @@
+ // LED and TM1637
+ 
+#include <TM1637Display.h>
+
+  const uint8_t OFF[] = {0, 0, 0, 0};
+
+  const uint8_t PLAY[] = {B01110011, B00111000, B01110111, B01101110};    // order .GFEDCBA
+  
+  
+  TM1637Display display(2, 3);  // clock and data pin
+
+  const int button1 = 8;
+  const int button2 = 4;
+  const int led1 = 9;
+  const int led2 = 5;
+   
+  int goal = 10;          
+  int buttonstate1 = 0;    
+  int buttonstate2 = 0;
+   
+  int counter1 = 0;        
+  int counter2 = 0;
+
+ void setup()
+ {
+  
+  pinMode(button1, INPUT);
+  pinMode(button2, INPUT);
+  pinMode(led1, OUTPUT);
+  pinMode(led2, OUTPUT);
+
+  display.setBrightness(0);
+  display.setSegments(OFF);
+
+  countdown();
+  displayPlay();
+  
+ }
+ void countdown() {
+  for(int i=10; i>0; i--) {
+   
+    display.showNumberDec(i, true, 4, 0);    
+    delay(1000);
+  }
+}
+void displayPlay() {
+  display.setSegments(PLAY);
+  delay(1000);
+  
+}
+
+ void loop() {
+  
+   buttonstate1 = digitalRead(button1);
+   buttonstate2 = digitalRead(button2);   
+   
+   if(buttonstate1 == HIGH) 
+   {
+     counter1++;
+     delay(200);
+     
+       if (counter1 == goal) 
+       {
+       digitalWrite(led1, HIGH);
+       }
+   }
+   
+   if(buttonstate2 == HIGH) 
+   {
+     counter2++;
+     delay(200);
+     
+       if (counter2 == goal) 
+       {
+       digitalWrite(led2, HIGH);
+       }
+   
+   } 
+   
+ }
